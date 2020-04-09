@@ -9,8 +9,9 @@ with load.open('/anaconda3/envs/astro/lib/python3.8/site-packages/skyfield/data/
     df = hipparcos.load_dataframe(f)
 
 print("hip data :",df.shape)
+df.to_csv('./res/hip_all.csv')
 
-mag65 = df[df['magnitude']<= 6.5]
-print("mag under 6.5 :",mag65.shape)
+mag90 = df[df['magnitude']<= 9.0]
+print("mag under 9.0 :",mag90.shape)
 
-mag65.to_csv('./res/hip_mag65.csv')
+mag90.to_csv('./res/hip_mag90.csv')
