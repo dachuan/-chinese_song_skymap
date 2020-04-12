@@ -15,14 +15,13 @@ with load.open('/anaconda3/envs/astro/lib/python3.8/site-packages/skyfield/data/
     df = hipparcos.load_dataframe(f)
 
 # beidou 7 star
-#hips=[54061, 53910, 53910, 58001, 58001, 59774, 59774, 62956, 62956, 65378, 65378, 67301]
-#ras = [165.93265365, 165.4599615, 165.4599615, 178.45725536, 178.45725536, 183.85603795, 183.85603795, 193.5068041, 193.5068041, 200.98091604, 200.98091604, 206.88560880000003]
-#decs = [61.75111888, 56.38234478, 56.38234478, 53.69473296, 53.69473296, 57.03259792, 57.03259792, 55.95984301, 55.95984301, 54.92541525, 54.92541525, 49.31330288]
+hips_beidou=[54061, 53910, 53910, 58001, 58001, 59774, 59774, 62956, 62956, 65378, 65378, 67301]
 
 # beiji
 hips_beiji= [75097, 72607, 72607, 70692, 70692, 69112, 69112, 62572]
-ras= [230.1822884, 222.67664751, 222.67664751, 216.88134383, 216.88134383, 212.21253759, 212.21253759, 192.30750199]
-decs= [71.83397308, 74.15547596, 74.15547596, 75.69593921, 75.69593921, 77.54743312, 77.54743312, 83.41285818]
+
+# gouchen
+hips_gouchen=[112833, 5372, 5372, 11767, 11767, 85822, 85822, 82080, 82080, 77055]
 
 # Ursa minor
 hips_umi=[11767, 85822, 85822, 82080, 82080, 77055, 77055, 79822, 79822, 75097, 75097, 72607, 72607, 77055]
@@ -30,6 +29,8 @@ hips_umi=[11767, 85822, 85822, 82080, 82080, 77055, 77055, 79822, 79822, 75097, 
 # construct stars 
 umi_stars = [Star.from_dataframe(df.loc[v]) for v in np.unique(hips_umi)]
 beiji_stars = [Star.from_dataframe(df.loc[v]) for v in np.unique(hips_beiji)]
+beidou_stars = [Star.from_dataframe(df.loc[v]) for v in np.unique(hips_beidou)]
+gouchen_stars  = [Star.from_dataframe(df.loc[v]) for v in np.unique(hips_gouchen)]
 
 # time scale is important to calculate
 ts = load.timescale()
@@ -42,31 +43,43 @@ earth = planets['earth']
 kaifeng = earth + Topos(longitude_degrees=(114,30,0),
                         latitude_degrees=(+34,8,0)) # north song capital
 
-ras_now=[]
-decs_now=[]
-ras_song = []
-decs_song = []
+ras_beiji=[]
+decs_beiji=[]
+ras_umi = []
+decs_umi = []
+ras_beidou = []
+decs_beidou = []
+ras_gouchen = []
+decs_gouchen = []
+
 for star in beiji_stars:
     astrometric = kaifeng.at(t_now).observe(star)
     apparent = astrometric.apparent()
-    #ra,dec,_ = apparent.radec()
-    #ras_now.append(ra.radians)
-    #decs_now.append(dec.degrees)
-    #print(ra._degrees)
-    #print('----------')
     ra,dec,_ = apparent.radec(epoch=t_song)
-    ras_song.append(ra.radians)
-    decs_song.append(dec.degrees)
-    #print(ra._degrees)
-    #print('**********')
+    ras_beiji.append(ra.radians)
+    decs_beiji.append(dec.degrees)
 
 
 for star in umi_stars:
     astrometric = kaifeng.at(t_now).observe(star)
     apparent = astrometric.apparent()
-    ra,dec,_ = apparent.radec()
-    ras_now.append(ra.radians)
-    decs_now.append(dec.degrees)
+    ra,dec,_ = apparent.radec(epoch=t_song)
+    ras_umi.append(ra.radians)
+    decs_umi.append(dec.degrees)
+
+for star in beidou_stars:
+    astrometric = kaifeng.at(t_now).observe(star)
+    apparent = astrometric.apparent()
+    ra,dec,_ = apparent.radec(epoch=t_song)
+    ras_beidou.append(ra.radians)
+    decs_beidou.append(dec.degrees)
+
+for star in gouchen_stars:
+    astrometric = kaifeng.at(t_now).observe(star)
+    apparent = astrometric.apparent()
+    ra,dec,_ = apparent.radec(epoch=t_song)
+    ras_gouchen.append(ra.radians)
+    decs_gouchen.append(dec.degrees)
 
 fig = plt.figure()
 ax = fig.add_axes([0,0,1,1],polar=True)
@@ -75,12 +88,16 @@ ax.set_ylim(-45, 0)
 #ax.set_ylim(-45, 45)
 
 
-for i in range(len(ras_song)):
-    ax.scatter(ras_song[i], 45-decs_song[i], color='red')
+for i in range(len(ras_beiji)):
+    ax.scatter(ras_beiji[i], 45-decs_beiji[i], color='red')
 
-for i in range(len(ras_now)):
-    ax.scatter(ras_now[i], 45-decs_now[i], color='blue')
+#for i in range(len(ras_umi)):
+    #ax.scatter(ras_umi[i], 45-decs_umi[i], color='blue')
 
-#ax.scatter(ras_song[0], 45-decs_song[0], color='red')
+for i in range(len(ras_beidou)):
+    ax.scatter(ras_beidou[i], 45-decs_beidou[i], color='blue')
+
+for i in range(len(ras_gouchen)):
+    ax.scatter(ras_gouchen[i], 45-decs_gouchen[i], color='green')
 
 plt.show()
