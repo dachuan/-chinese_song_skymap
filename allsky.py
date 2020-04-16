@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 from skyfield_data import get_skyfield_data_path
 from skyfield.api import Loader
@@ -11,26 +12,17 @@ from skyfield.data import hipparcos
 from skyfield.units import Angle
 
 # load hip star data
-with load.open('/anaconda3/envs/astro/lib/python3.8/site-packages/skyfield/data/hip_main.dat.gz') as f:
-    df = hipparcos.load_dataframe(f)
+asterisms= pd.read_csv('./res/song_con.txt',header=None) # song star data
+asterisms.columns=['constellation','num_pairs','stars','name','ras','decs','xingxiu','mags']
+print(asterisms.shape)
+print(asterisms.loc[0,'name'])
 
-# beidou 7 star
-hips_beidou=[54061, 53910, 53910, 58001, 58001, 59774, 59774, 62956, 62956, 65378, 65378, 67301]
-
-# beiji
-hips_beiji= [75097, 72607, 72607, 70692, 70692, 69112, 69112, 62572]
-
-# gouchen
-hips_gouchen=[112833, 5372, 5372, 11767, 11767, 85822, 85822, 82080, 82080, 77055]
 
 # Ursa minor
-hips_umi=[11767, 85822, 85822, 82080, 82080, 77055, 77055, 79822, 79822, 75097, 75097, 72607, 72607, 77055]
+#hips_umi=[11767, 85822, 85822, 82080, 82080, 77055, 77055, 79822, 79822, 75097, 75097, 72607, 72607, 77055]
 
 # construct stars 
-umi_stars = [Star.from_dataframe(df.loc[v]) for v in np.unique(hips_umi)]
-beiji_stars = [Star.from_dataframe(df.loc[v]) for v in np.unique(hips_beiji)]
-beidou_stars = [Star.from_dataframe(df.loc[v]) for v in np.unique(hips_beidou)]
-gouchen_stars  = [Star.from_dataframe(df.loc[v]) for v in np.unique(hips_gouchen)]
+#umi_stars = [Star.from_dataframe(df.loc[v]) for v in np.unique(hips_umi)]
 
 # time scale is important to calculate
 ts = load.timescale()
@@ -43,6 +35,7 @@ earth = planets['earth']
 kaifeng = earth + Topos(longitude_degrees=(114,30,0),
                         latitude_degrees=(+34,8,0)) # north song capital
 
+"""
 ras_beiji=[]
 decs_beiji=[]
 ras_umi = []
@@ -84,20 +77,7 @@ for star in gouchen_stars:
 fig = plt.figure()
 ax = fig.add_axes([0,0,1,1],polar=True)
 ax.set_theta_direction(-1)
-ax.set_ylim(-45, 0)
-#ax.set_ylim(-45, 45)
-
-
-for i in range(len(ras_beiji)):
-    ax.scatter(ras_beiji[i], 45-decs_beiji[i], color='red')
-
-#for i in range(len(ras_umi)):
-    #ax.scatter(ras_umi[i], 45-decs_umi[i], color='blue')
-
-for i in range(len(ras_beidou)):
-    ax.scatter(ras_beidou[i], 45-decs_beidou[i], color='blue')
-
-for i in range(len(ras_gouchen)):
-    ax.scatter(ras_gouchen[i], 45-decs_gouchen[i], color='green')
+ax.set_ylim(-45, 45)
 
 plt.show()
+"""

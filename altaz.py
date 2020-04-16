@@ -45,6 +45,10 @@ kaifeng = earth + Topos(longitude_degrees=(114,30,0),
 
 ras_beiji=[]
 decs_beiji=[]
+
+alt_beiji=[]
+az_beiji=[]
+
 ras_umi = []
 decs_umi = []
 ras_beidou = []
@@ -52,14 +56,21 @@ decs_beidou = []
 ras_gouchen = []
 decs_gouchen = []
 
-for star in beiji_stars:
-    astrometric = kaifeng.at(t_now).observe(star)
+for star in umi_stars:
+    astrometric = kaifeng.at(ts.utc(2020,4,16,16,30,37.5)).observe(star)
+    #astrometric = kaifeng.at(t_now).observe(star)
     apparent = astrometric.apparent()
-    ra,dec,_ = apparent.radec(epoch=t_song)
-    ras_beiji.append(ra.radians)
-    decs_beiji.append(dec.degrees)
+    alt,az,_ = apparent.altaz()
+    alt_beiji.append(alt.degrees)
+    az_beiji.append(az.radians)
+    #ra,dec,_ = apparent.radec()
+    #ra,dec,_ = apparent.radec(epoch=t_song)
+    #ras_beiji.append(ra.radians)
+    #decs_beiji.append(dec.degrees)
 
-
+print(alt_beiji)
+print(az_beiji)
+"""
 for star in umi_stars:
     astrometric = kaifeng.at(t_now).observe(star)
     apparent = astrometric.apparent()
@@ -80,24 +91,26 @@ for star in gouchen_stars:
     ra,dec,_ = apparent.radec(epoch=t_song)
     ras_gouchen.append(ra.radians)
     decs_gouchen.append(dec.degrees)
+"""
 
 fig = plt.figure()
 ax = fig.add_axes([0,0,1,1],polar=True)
 ax.set_theta_direction(-1)
-ax.set_ylim(-45, 0)
-#ax.set_ylim(-45, 45)
+#ax.set_ylim(0, 40)
+ax.set_ylim(-45, 45)
 
 
-for i in range(len(ras_beiji)):
-    ax.scatter(ras_beiji[i], 45-decs_beiji[i], color='red')
+for i in range(len(alt_beiji)):
+    ax.scatter(az_beiji[i], 45-alt_beiji[i], color='red')
+    #ax.scatter(ras_beiji[i], 45-decs_beiji[i], color='red')
 
 #for i in range(len(ras_umi)):
     #ax.scatter(ras_umi[i], 45-decs_umi[i], color='blue')
 
-for i in range(len(ras_beidou)):
-    ax.scatter(ras_beidou[i], 45-decs_beidou[i], color='blue')
-
-for i in range(len(ras_gouchen)):
-    ax.scatter(ras_gouchen[i], 45-decs_gouchen[i], color='green')
+#for i in range(len(ras_beidou)):
+#    ax.scatter(ras_beidou[i], 45-decs_beidou[i], color='blue')
+#
+#for i in range(len(ras_gouchen)):
+#    ax.scatter(ras_gouchen[i], 45-decs_gouchen[i], color='green')
 
 plt.show()
