@@ -2,14 +2,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from skyfield_data import get_skyfield_data_path
-from skyfield.api import Loader
-load = Loader(get_skyfield_data_path())
+#from skyfield_data import get_skyfield_data_path
+#from skyfield.api import Loader
+#load = Loader(get_skyfield_data_path())
 
 
-from skyfield.api import Star,Topos
-from skyfield.data import hipparcos
-from skyfield.units import Angle
+#from skyfield.api import Star,Topos
+#from skyfield.data import hipparcos
+#from skyfield.units import Angle
 
 # load hip star data
 asterisms= pd.read_csv('./res/song_con.txt',header=None) # song star data
@@ -45,7 +45,9 @@ for index,row  in asterisms.iterrows():
     decs = [float(i) for i in decs]
 
     # plot stars
-    for ra,dec in zip(ras,decs):
+
+    # dict to reduce same star
+    for ra,dec in dict(zip(ras,decs)).items():
         ax.scatter(ra,45-dec,
                 color='grey',edgecolor='black',
                 s=1,
