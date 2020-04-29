@@ -32,11 +32,11 @@ ax.set_theta_direction(-1)
 ax.set_xticks([]) #no ticks
 ax.set_yticks([]) #no ticks
 # linear
-#ax.set_ylim(-45, 105) # -45, 45
+ax.set_ylim(0, 150) # -45, 45
 
-# ortho
-r = 90
-ax.set_ylim(0,r)
+# ortho, gnomonic
+#r = 90
+#ax.set_ylim(0,120)
 
 ax.set_theta_zero_location('N', offset=30)
 
@@ -47,10 +47,17 @@ for index,row  in asterisms.iterrows():
     decs = row['decs'].replace('[','').replace(']','').split(',')
 
     ras = [np.radians(float(i)) for i in ras]
-    # linear
     decs = [float(i) for i in decs]
+
+    # linear
+    decs = [90-i for i in decs]
     # ortho
-    decs = [r*np.cos(np.radians(i)) for i in decs]
+    #decs = [r*np.cos(np.radians(i)) for i in decs]
+    # gnomonic
+    #decs = [r/np.tan(np.radians(i)) for i in decs]
+    # stereo
+    #decs = [r*np.cos(np.radians(i))*2/(np.sin(np.radians(i))+1) for i in decs]
+
 
     # plot stars
     #-----------------------------
@@ -65,7 +72,7 @@ for index,row  in asterisms.iterrows():
         #        s=1,
         #        alpha=0.8,zorder=1)
 
-        # ortho
+        # ortho, gnomonic, stereo
         ##
         ax.scatter(ra,dec,
                 color='grey',edgecolor='black',
