@@ -32,11 +32,11 @@ ax.set_theta_direction(-1)
 ax.set_xticks([]) #no ticks
 #ax.set_yticks([]) #no ticks
 # linear
-#ax.set_ylim(0, 150) # -45, 45
+ax.set_ylim(0, 80) # -45, 45
 
 # ortho, gnomonic
 r = 90
-ax.set_ylim(0,190)
+#ax.set_ylim(0,190)
 #ax.set_ylim(0,2*r)
 
 ax.set_theta_zero_location('N', offset=30)
@@ -62,14 +62,15 @@ for index,row  in asterisms.iterrows():
 
     # linear
     #decs = [90-i for i in decs]
+    decs = [45-i/2 for i in decs]
     # ortho
     #decs = [r*np.cos(np.radians(i)) for i in decs]
     # gnomonic
     #decs = [ (i+130)*90/160 for i in decs] # [-60,90] relocate to [70,90]
     #decs = [r/np.tan(np.radians(i)) for i in decs]
     # stereo
-    decs = [ (i+60)*90/150 for i in decs] # [-60,90] relocate to [0,90]
-    decs = [r*np.cos(np.radians(i))*2/(np.sin(np.radians(i))+1) for i in decs]
+    #decs = [ (i+60)*90/150 for i in decs] # [-60,90] relocate to [0,90]
+    #decs = [r*np.cos(np.radians(i))*2/(np.sin(np.radians(i))+1) for i in decs]
 
 
     # plot stars
