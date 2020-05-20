@@ -14,7 +14,7 @@ ax.set_theta_direction(-1)
 #ax.set_yticks([]) #no ticks
 
 # linear
-ax.set_ylim(0, 80) # -45, 45
+ax.set_ylim(0, 70) # -45, 45
 
 # ortho, gnomonic
 r = 90
@@ -68,9 +68,13 @@ for index,row  in asterisms.iterrows():
 
     # plot constellation lines
     ##
+    if row['xingxiu'] == True:
+        line_color='#FF0088'
+    else:
+        line_color='green'
     for n in range(int(len(ras)/2)): #1-2
         ax.plot(ras[n*2:(n+1)*2], decs[n*2:(n+1)*2],
-                color='green', 
+                color=line_color, 
                 lw=1,
                 alpha=0.5,zorder=0)
 
