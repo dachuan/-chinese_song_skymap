@@ -90,9 +90,9 @@ ax.set_theta_zero_location('N', offset=30)
 #dec_max=0
 
 # sun orbit
-ax.scatter(ras_sun,decs_sun,color='yellow')
+ax.plot(ras_sun,decs_sun,color='yellow',linewidth=2)
 # moon orbit
-ax.scatter(ras_moon,decs_moon,color='brown')
+ax.plot(ras_moon,decs_moon,color='brown',linewidth=2)
 
 for index,row  in asterisms.iterrows():
 
