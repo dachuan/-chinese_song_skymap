@@ -27,26 +27,45 @@ kaifeng = earth + Topos(longitude_degrees=(114,30,0),
 ## one year 
 
 # what time to set relation to xinxiu and moon?
+# two branches : now or song
+
 # 2020-3-24 is chuyi
+# -------------------------
 # now time
-d1 = dt.datetime(2020,3,29,23,0,0) 
+# -------------------------
+
+#d1 = dt.datetime(2020,3,29,23,0,0) 
 
 # use beisong 1078-1085
+# -------------------------
+# song
+# -------------------------
 # error!
 # ephemeris segment only covers dates 1899-07-28 23:59:18Z through 2053
 #d1 = dt.datetime(1080,3,29,23,0,0) 
 
-#d1 = dt.datetime(2020,1,1,0,0,0)
+#d1 = time_scale.utc(2020,3,29,0,0)
+d1 = time_scale.utc(1080,3,29,0,0)
 
-d_oneyear = [d1 +dt.timedelta(days=1)*i for i in range(366)]
-t_oneyear = [time_scale.utc(i.year, i.month, i.day, i.hour, i.minute, i.second)
-        for i in d_oneyear]
+# datetime is not suitable for song
+#d_oneyear = [d1 +dt.timedelta(days=1)*i for i in range(366)]
+#t_oneyear = [time_scale.utc(i.year, i.month, i.day, i.hour, i.minute, i.second)
+#        for i in d_oneyear]
+
+# julian date 
+# skyfield time class
+d1tt = d1.tt
+t_oneyear = [time_scale.tt_jd(d1tt + i) for i in range(366)]
+
 
 ## get sun ra dec in everyday of one year
 ras_sun = []
 decs_sun = []
 for t in t_oneyear:
-    radec = kaifeng.at(t).observe(sun).apparent().radec()
+    # now time
+    #radec = kaifeng.at(t).observe(sun).apparent().radec()
+    # song time
+    radec = kaifeng.at(t).observe(sun).apparent().radec(epoch=d1)
     ra = np.radians(radec[0]._degrees)
     dec = radec[1].degrees
     ras_sun.append(ra)
@@ -57,15 +76,27 @@ decs_sun = [45 -i/2 for i in decs_sun]
 
 ## get moon ra dec in 30 days
 
+#### for now time ----------------------
 #d_onemonth = [d1 +dt.timedelta(days=1)*i for i in range(366)]
-d_onemonth = [d1 +dt.timedelta(days=1)*i for i in range(28)]
-t_onemonth = [time_scale.utc(i.year, i.month, i.day, i.hour, i.minute, i.second)
-        for i in d_onemonth]
+#d_onemonth = [d1 +dt.timedelta(days=1)*i for i in range(28)]
+
+
+### for song time --------------------------
+# convert to utc
+#d_onemonth = [d1 +dt.timedelta(days=1)*i for i in range(28)]
+#t_onemonth = [time_scale.utc(i.year, i.month, i.day, i.hour, i.minute, i.second)
+#        for i in d_onemonth]
+
+t_onemonth = [time_scale.tt_jd(d1tt + i) for i in range(28)]
+
 ras_moon = []
 decs_moon = []
 
 for t in t_onemonth:
-    radec = kaifeng.at(t).observe(moon).apparent().radec()
+    # now time
+    #radec = kaifeng.at(t).observe(moon).apparent().radec()
+    # song time
+    radec = kaifeng.at(t).observe(moon).apparent().radec(epoch=d1)
     ra = np.radians(radec[0]._degrees)
     dec = radec[1].degrees
     ras_moon.append(ra)
