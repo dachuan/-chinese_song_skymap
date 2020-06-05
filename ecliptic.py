@@ -25,7 +25,19 @@ kaifeng = earth + Topos(longitude_degrees=(114,30,0),
                         latitude_degrees=(+34,8,0))
 
 ## one year 
-d1 = dt.datetime(2020,1,1,0,0,0)
+
+# what time to set relation to xinxiu and moon?
+# 2020-3-24 is chuyi
+# now time
+d1 = dt.datetime(2020,3,29,23,0,0) 
+
+# use beisong 1078-1085
+# error!
+# ephemeris segment only covers dates 1899-07-28 23:59:18Z through 2053
+#d1 = dt.datetime(1080,3,29,23,0,0) 
+
+#d1 = dt.datetime(2020,1,1,0,0,0)
+
 d_oneyear = [d1 +dt.timedelta(days=1)*i for i in range(366)]
 t_oneyear = [time_scale.utc(i.year, i.month, i.day, i.hour, i.minute, i.second)
         for i in d_oneyear]
@@ -45,8 +57,8 @@ decs_sun = [45 -i/2 for i in decs_sun]
 
 ## get moon ra dec in 30 days
 
-d_onemonth = [d1 +dt.timedelta(days=1)*i for i in range(366)]
-#d_onemonth = [d1 +dt.timedelta(days=1)*i for i in range(31)]
+#d_onemonth = [d1 +dt.timedelta(days=1)*i for i in range(366)]
+d_onemonth = [d1 +dt.timedelta(days=1)*i for i in range(28)]
 t_onemonth = [time_scale.utc(i.year, i.month, i.day, i.hour, i.minute, i.second)
         for i in d_onemonth]
 ras_moon = []
@@ -89,10 +101,12 @@ ax.set_theta_zero_location('N', offset=30)
 #dec_min=0
 #dec_max=0
 
-# sun orbit
+# plot sun orbit
 ax.plot(ras_sun,decs_sun,color='yellow',linewidth=2)
-# moon orbit
-ax.plot(ras_moon,decs_moon,color='brown',linewidth=2)
+# plot moon orbit
+#ax.plot(ras_moon,decs_moon,color='brown',linewidth=2)
+# plot moon 28 mansions
+ax.scatter(ras_moon,decs_moon,color='brown',s=30)
 
 for index,row  in asterisms.iterrows():
 
