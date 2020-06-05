@@ -34,6 +34,7 @@ kaifeng = earth + Topos(longitude_degrees=(114,30,0),
 # now time
 # -------------------------
 
+t_now = time_scale.now()
 #d1 = dt.datetime(2020,3,29,23,0,0) 
 
 # use beisong 1078-1085
@@ -44,8 +45,9 @@ kaifeng = earth + Topos(longitude_degrees=(114,30,0),
 # ephemeris segment only covers dates 1899-07-28 23:59:18Z through 2053
 #d1 = dt.datetime(1080,3,29,23,0,0) 
 
-#d1 = time_scale.utc(2020,3,29,0,0)
-d1 = time_scale.utc(1080,3,29,0,0)
+d1 = time_scale.utc(2020,3,29,0,0)
+#d1 = time_scale.utc(1080,3,29,0,0)
+d1tt = d1.tt
 
 # datetime is not suitable for song
 #d_oneyear = [d1 +dt.timedelta(days=1)*i for i in range(366)]
@@ -54,7 +56,6 @@ d1 = time_scale.utc(1080,3,29,0,0)
 
 # julian date 
 # skyfield time class
-d1tt = d1.tt
 t_oneyear = [time_scale.tt_jd(d1tt + i) for i in range(366)]
 
 
@@ -63,9 +64,9 @@ ras_sun = []
 decs_sun = []
 for t in t_oneyear:
     # now time
-    #radec = kaifeng.at(t).observe(sun).apparent().radec()
+    radec = kaifeng.at(t).observe(sun).apparent().radec()
     # song time
-    radec = kaifeng.at(t).observe(sun).apparent().radec(epoch=d1)
+    #radec = kaifeng.at(t_now).observe(sun).apparent().radec(epoch=t)
     ra = np.radians(radec[0]._degrees)
     dec = radec[1].degrees
     ras_sun.append(ra)
@@ -94,9 +95,9 @@ decs_moon = []
 
 for t in t_onemonth:
     # now time
-    #radec = kaifeng.at(t).observe(moon).apparent().radec()
+    radec = kaifeng.at(t).observe(moon).apparent().radec()
     # song time
-    radec = kaifeng.at(t).observe(moon).apparent().radec(epoch=d1)
+    #radec = kaifeng.at(t_now).observe(moon).apparent().radec(epoch=t)
     ra = np.radians(radec[0]._degrees)
     dec = radec[1].degrees
     ras_moon.append(ra)
