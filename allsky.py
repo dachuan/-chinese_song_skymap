@@ -39,7 +39,7 @@ r = 90
 #ax.set_ylim(0,190)
 #ax.set_ylim(0,2*r)
 
-ax.set_theta_zero_location('N', offset=30)
+ax.set_theta_zero_location('N', offset=-40)
 
 #dec_min=0
 #dec_max=0
@@ -113,5 +113,32 @@ for index,row  in asterisms.iterrows():
 
 #print('min of dec is :', dec_min)
 #print('max of dec is :', dec_max)
+
+#----------------------------------------------------------------------------------------#
+#----------------galaxy plot-------------------------------------------------------------#
+#----------------------------------------------------------------------------------------#
+stars= pd.read_csv('./res/song_mag90.csv') # song star data
+
+s_ras=[]
+s_decs=[]
+for index,row  in stars.iterrows():
+
+    ra = row['ra_degrees']
+    dec = row['dec_degrees']
+    mag = row['magnitude']
+    dec = 45-dec/2
+
+    s_ras.append(ra)
+    s_decs.append(dec)
+
+ax.scatter(np.radians(s_ras),s_decs,
+        color='blue',
+        #edgecolor='black',
+        s=1,
+        alpha=0.05,
+        zorder=-1
+        )
+
+ax.scatter(0,0,color='yellow',s=4)
 
 plt.show()
