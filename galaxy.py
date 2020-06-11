@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+np.warnings.filterwarnings('ignore')
+
 # load hip star data
 stars= pd.read_csv('./res/song_mag90.csv') # song star data
 #print(stars.head())
@@ -26,6 +28,7 @@ ax.set_theta_zero_location('N', offset=30)
 
 ras=[]
 decs=[]
+alphas=[]
 for index,row  in stars.iterrows():
 
     ra = row['ra_degrees']
@@ -50,65 +53,52 @@ for index,row  in stars.iterrows():
     max_mag = 9.0
     min_mag = -1.44
     _alpha = (mag - min_mag)/(max_mag - min_mag)
+    _alpha = 1 -_alpha
+    _alpha = int(_alpha*10) / 10.0
+    ras.append(ra)
+    decs.append(dec)
+    alphas.append(_alpha)
 
-    if _alpha < 0.01:
-        continue
-    else:
-        ras.append(ra)
-        decs.append(dec)
+#print(len(alphas))
+#print(alphas[:100])
+#print(np.unique(alphas))
+#
 
-print(len(ras))
+zzz = sorted(zip(alphas,ras,decs))
 
+s_a , s_r ,s_d = zip(*zzz)
+
+u,i = np.unique(s_a,return_index=True)
+
+print(i)
+
+for ii in range(1,len(i)):
+    _ras = s_r[i[ii-1]:i[ii]]
+    _decs = s_d[i[ii-1]:i[ii]]
+    print(i[ii-1])
+    print('alpha :',s_a[i[ii-1]])
+    ax.scatter(np.radians(_ras),_decs,
+            color='blue',
+            #edgecolor='black',
+            s=0.2,
+            alpha=s_a[i[ii-1]]*0.5+0.01,
+            #alpha=0.05,
+            #zorder=1
+            )
+
+ax.scatter(0,0,color='yellow',s=4)
+
+
+'''
 ax.scatter(np.radians(ras),decs,
         color='blue',
         #edgecolor='black',
         s=0.2,
-        alpha=0.05,
+        alpha=alphas,
+        #alpha=0.05,
         #zorder=1
         )
 ax.scatter(0,0,color='yellow',s=4)
+'''
 
 plt.show()
-
-"""
-    # dict to reduce same star
-    for ra,dec in dict(zip(ras,decs)).items():
-
-        # linerar
-        ##
-        #ax.scatter(ra,45-dec,
-        #        color='grey',edgecolor='black',
-        #        s=1,
-        #        alpha=0.8,zorder=1)
-
-        # ortho, gnomonic, stereo
-        ##
-        ax.scatter(ra,dec,
-                color='grey',edgecolor='black',
-                s=1,
-                alpha=0.8,zorder=1)
-
-    # plot constellation lines
-    ##
-
-    # linear
-    #_decs = [45-i for i in decs]
-
-    #for n in range(int(len(ras)/2)): #1-2
-    #    ax.plot(ras[n*2:(n+1)*2], _decs[n*2:(n+1)*2],
-    #            color='green', 
-    #            lw=1,
-    #            alpha=0.5,zorder=0)
-
-    for n in range(int(len(ras)/2)): #1-2
-        ax.plot(ras[n*2:(n+1)*2], decs[n*2:(n+1)*2],
-                color='green', 
-                lw=1,
-                alpha=0.5,zorder=0)
-
-#print('min of dec is :', dec_min)
-#print('max of dec is :', dec_max)
-
-
-plt.show()
-"""
