@@ -13,8 +13,9 @@ ax = fig.add_axes([0,0,1,1],polar=True)
 ax.set_theta_direction(-1)
 ax.set_xticks([]) #no ticks
 ax.set_yticks([]) #no ticks
+
 # linear
-ax.set_ylim(0, 100) # -45, 45
+#ax.set_ylim(0, 100) # -45, 45
 
 # ortho, gnomonic
 r = 90
@@ -36,7 +37,7 @@ for index,row  in stars.iterrows():
     mag = row['magnitude']
 
     # linear
-    dec = 45-dec/2
+    #dec = 45-dec/2
     # ortho
     #decs = [r*np.cos(np.radians(i)) for i in decs]
     # gnomonic
@@ -72,11 +73,41 @@ u,i = np.unique(s_a,return_index=True)
 
 print(i)
 
+###
+# transform the data to projection
+###
+
+prj_type = 'stereo'
+
+if prj_type =='linear':
+    # linear
+    s_d = [90-i for i in s_d]
+    #s_d = [45-i/2 for i in s_d]
+    ax.set_ylim(0, max(s_d)+2) # -45, 45
+elif prj_type=='ortho':
+    # ortho
+    r = 90 
+    s_d = [r*np.cos(np.radians(i)) for i in s_d]
+    ax.set_ylim(0, 180) # -45, 45
+elif prj_type=='gnomonic':
+    r = 90
+    s_d = [r/np.tan(np.radians(i)) for i in s_d]
+    #print(max(s_d))
+    ax.set_ylim(0, 500) # -45, 45
+elif prj_type=='stereo':
+    r = 90
+    s_d = [r*np.cos(np.radians(i))*2/(np.sin(np.radians(i))+1) for i in s_d]
+    print(max(s_d))
+    ax.set_ylim(0, 360) # -45, 45
+else:
+    print('the projection type is not correct!')
+
+
 for ii in range(1,len(i)):
     _ras = s_r[i[ii-1]:i[ii]]
     _decs = s_d[i[ii-1]:i[ii]]
-    print(i[ii-1])
-    print('alpha :',s_a[i[ii-1]])
+    #print(i[ii-1])
+    #print('alpha :',s_a[i[ii-1]])
     ax.scatter(np.radians(_ras),_decs,
             color='blue',
             #edgecolor='black',
