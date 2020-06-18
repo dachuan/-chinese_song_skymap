@@ -11,7 +11,9 @@ from skyfield.data import hipparcos
 from skyfield.units import Angle
 
 # load hip star data
-with load.open('/anaconda3/envs/astro/lib/python3.8/site-packages/skyfield/data/hip_main.dat.gz') as f:
+#with load.open('/anaconda3/envs/astro/lib/python3.8/site-packages/skyfield/data/hip_main.dat.gz') as f:
+with load.open(hipparcos.URL) as f:
+    #the download hi_main.dat.gz in ..../site-packages/skyfield/data
     df = hipparcos.load_dataframe(f)
 
 # beidou 7 star
